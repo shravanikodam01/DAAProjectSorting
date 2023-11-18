@@ -1,0 +1,15 @@
+body {
+  font-family: sans-serif;
+}
+
+.element {
+  display: inline-block;
+  border: 1px solid black;
+  padding: 4px;
+  margin: 2px;
+}
+
+#randomArrayDiv,
+#inputArrayDiv {
+  display: none;
+}

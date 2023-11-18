@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <h1>Sorting</h1>
+    <button id='reset'>Reset</button>
+    <div id='chooseRandomOrArray'>
+      <button id='randomArrayButton'>Randomly Generate</button>
+      <button id='userArrayButton'>Enter Array</button>
+    </div>
+    <div id="randomArrayDiv">
+      <label>Enter size for an array</label>
+      <input id='inputSize'/>
+      <label>Enter minimum value for an array</label>
+      <input id='min'/>
+      <label>Enter maximum value for an array</label>
+      <input id='max'/>
+    </div>
+    </div>
+    <div id="inputArrayDiv">
+      <label>Input array numbers</label>
+      <input id="inputArray" class="input-array" />
+    </div>
+    <div>
+        
+      <h3>Select sorting algorithm</h3>
+      <input class="sortCheckBox" type="checkbox" value="insertion"><label>Insertion</label><br>
+      <input class="sortCheckBox" type="checkbox" value="bubble"><label>Bubble</label><br>
+      <input class="sortCheckBox" type="checkbox" value="selection"><label>Selection</label><br>
+      <input class="sortCheckBox" type="checkbox" value="merge"><label>Merge</label><br>
+      <input class="sortCheckBox" type="checkbox" value="heap"><label>Heap</label><br>
+      <input class="sortCheckBox" type="checkbox" value="quick"><label>Quick</label><br>
+      <input class="sortCheckBox" type="checkbox" value="threeWayQuick"><label>3 way Quick</label><br>
+
+
+      <button id='checkTime'>Time Comparision</button>
+      <!-- <button id="insertion">InsertionSort</button>
+      <button id="bubble">Bubble Sort</button>
+      <button id="selection">Selection Sort</button> -->
+    </div>
+    <div class="sorted-array-div">
+      <h3>Sorted Array</h3>
+      <div id="sortedDiv"></div>
+      <div id="timeCal"></div>
+    </div>
+    <script src="./index.js"></script>
+    <!-- <script src="./insertionSort.js"></script> -->
+  </body>
+</html>
