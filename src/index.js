@@ -1,8 +1,26 @@
-import "./styles.css";
 
-let randomOrUser = "none";
+
+let randomOrUser = "none",
+  data = [],
+  arrLength = [],
+  checkedSortingAlgoArray = [],
+  sortedArray=[]
 let input = undefined;
 var i, j;
+
+document.getElementById("reset").addEventListener("click", function (e) {
+  input = undefined;
+  randomOrUser = "none";
+  data = [];
+  arrLength = [],
+  checkedSortingAlgoArray = [];
+  document.getElementById("randomArrayDiv").style.display = "none";
+  document.getElementById("inputArrayDiv").style.display = "none";
+    document.getElementById("randomArrayButton").style.display = "inline-block";
+    document.getElementById("userArrayButton").style.display = "inline-block";
+  document.getElementById('canvasDiv').innerHTML=''
+  displayTable()
+});
 document
   .getElementById("randomArrayButton")
   .addEventListener("click", function (e) {
@@ -36,6 +54,114 @@ function display(arr, timeElapsed) {
   timeCal.innerHTML = `${timeElapsed} milliseconds`;
 }
 
+function displayTable() {
+
+  let tableDiv = document.getElementById("comparisionTable");
+  let tableStr = `<table><tr>
+  <th>Input size</th>
+  <th>Insertion</th>
+  <th>Bubble</th>
+  <th>Selection</th>
+  <th>Merge</th>
+  <th>Heap</th>
+  <th>Quick</th>
+  <th>3 way Quick</th>
+  </tr>
+</tr>`;
+  let canvas,chart;
+  for (let i = 0; i < data.length; i++) {
+    canvas = document.createElement("div");
+    canvas.setAttribute("id", "canvas" + i);
+
+    document.getElementById("canvasDiv").appendChild(canvas);
+    
+    document.getElementById('canvas'+i).style.width='700px'
+    document.getElementById('canvas'+i).style.height='500px'
+    document.getElementById('canvas'+i).style.padding='20px'
+    document.getElementById('canvas'+i).style.display='inline-block'
+    chart = new CanvasJS.Chart("canvas" + i, {
+      animationEnabled: true,
+      theme: "light2", // "light1", "light2", "dark1", "dark2"
+      title: {
+        text: "Sorting Algorithms behaviour for array length "+arrLength[i]
+      },
+      axisY: {
+        title: "Running time for array length "+arrLength[i]
+      },
+      data: [
+        {
+          type: "column",
+          showInLegend: true,
+          legendMarkerColor: "grey",
+          legendText: "milliseconds",
+          dataPoints: data[i].map(function(value,ind){
+            if (checkedSortingAlgoArray[i].includes("insertion") && ind == 0) {
+              return {y: data[i][ind]['insertion'].time, label: "insertion"}
+            }
+            if (checkedSortingAlgoArray[i].includes("bubble") && ind == 1) {
+              return {y: data[i][ind]['bubble'].time, label: "bubble"}
+            }
+            if (checkedSortingAlgoArray[i].includes("selection") && ind == 2) {
+              return {y: data[i][ind]['selection'].time, label: "selection"}
+            }
+            if (checkedSortingAlgoArray[i].includes("merge") && ind == 3) {
+              return {y: data[i][ind]['merge'].time, label: "merge"}
+            }
+            if (checkedSortingAlgoArray[i].includes("heap") && ind == 4) {
+              return {y: data[i][ind]['heap'].time, label: "heap"}
+            }
+            if (checkedSortingAlgoArray[i].includes("quick") && ind == 5) {
+              return {y: data[i][ind]['quick'].time, label: "quick"}
+            }
+            if (checkedSortingAlgoArray[i].includes("threeWayQuick") && ind == 6) {
+              return {y: data[i][ind]['threeWayQuick'].time, label: "threeWayQuick"}
+            }
+          }).filter(function(ele){
+            return ele != undefined
+          })
+        }
+      ]
+    });
+    chart.render();
+
+    
+    tableStr = tableStr + "<tr>";
+
+    tableStr = tableStr + "<td>" + arrLength[i] + "</td>";
+    for (let j = 0; j < data[i].length; j++) {
+      if (checkedSortingAlgoArray[i].includes("insertion") && j == 0) {
+        tableStr = tableStr + "<td>" + data[i][j].insertion.time + "</td>";
+      } else if (checkedSortingAlgoArray[i].includes("bubble") && j == 1) {
+        tableStr = tableStr + "<td>" + data[i][j].bubble.time + "</td>";
+      } else if (checkedSortingAlgoArray[i].includes("selection") && j == 2) {
+        tableStr = tableStr + "<td>" + data[i][j].selection.time + "</td>";
+      } else if (checkedSortingAlgoArray[i].includes("merge") && j == 3) {
+        tableStr = tableStr + "<td>" + data[i][j].merge.time + "</td>";
+      } else if (checkedSortingAlgoArray[i].includes("heap") && j == 4) {
+        tableStr = tableStr + "<td>" + data[i][j].heap.time + "</td>";
+      } else if (checkedSortingAlgoArray[i].includes("quick") && j == 5) {
+        tableStr = tableStr + "<td>" + data[i][j].quick.time + "</td>";
+      } else if (
+        checkedSortingAlgoArray[i].includes("threeWayQuick") &&
+        j == 6
+      ) {
+        tableStr = tableStr + "<td>" + data[i][j].threeWayQuick.time + "</td>";
+      } else {
+        tableStr = tableStr + "<td>" + "-" + "</td>";
+      }
+    }
+    tableStr = tableStr + "</tr>";
+  }
+  tableStr = tableStr + "</table>";
+
+  tableDiv.innerHTML = tableStr;
+
+  document.getElementById("randomArrayDiv").style.display = "none";
+  document.getElementById("inputArrayDiv").style.display = "none";
+  document.getElementById("randomArrayButton").style.display = "inline-block";
+  document.getElementById("userArrayButton").style.display = "inline-block";
+}
+
 function setInput() {
   if (randomOrUser == "user") {
     input = document.getElementById("inputArray").value.split(" ");
@@ -43,7 +169,7 @@ function setInput() {
       return Number(num);
     });
   }
-  if (randomOrUser == "random") {
+  else if (randomOrUser == "random") {
     let min = Number(document.getElementById("min").value);
     let max = Number(document.getElementById("max").value);
     let n = Number(document.getElementById("inputSize").value);
@@ -60,7 +186,7 @@ function setInput() {
 }
 
 function insertionSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let key, j;
   let startTime = window.performance.now();
@@ -79,7 +205,7 @@ function insertionSort() {
 }
 
 function bubbleSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   for (let i = 0; i < inputForSort.length - 1; i++) {
@@ -97,7 +223,7 @@ function bubbleSort() {
 }
 
 function selectionSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   for (let i = 0; i < inputForSort.length - 1; i++) {
@@ -118,23 +244,19 @@ function merge(arr, l, m, r) {
   var n1 = m - l + 1;
   var n2 = r - m;
 
-  // Create temp arrays
+  
   var L = new Array(n1);
   var R = new Array(n2);
 
-  // Copy data to temp arrays L[] and R[]
   for (var i = 0; i < n1; i++) L[i] = arr[l + i];
   for (var j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
 
-  // Merge the temp arrays back into arr[l..r]
-
-  // Initial index of first subarray
+  
   var i = 0;
 
-  // Initial index of second subarray
+  
   var j = 0;
 
-  // Initial index of merged subarray
   var k = l;
 
   while (i < n1 && j < n2) {
@@ -148,16 +270,13 @@ function merge(arr, l, m, r) {
     k++;
   }
 
-  // Copy the remaining elements of
-  // L[], if there are any
   while (i < n1) {
     arr[k] = L[i];
     i++;
     k++;
   }
 
-  // Copy the remaining elements of
-  // R[], if there are any
+  
   while (j < n2) {
     arr[k] = R[j];
     j++;
@@ -174,7 +293,7 @@ function mergeSortAlgo(arr, l, r) {
   merge(arr, l, m, r);
 }
 function mergeSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   mergeSortAlgo(inputForSort, 0, inputForSort.length - 1);
@@ -185,45 +304,39 @@ function mergeSort() {
 function heapSortAlgo(arr) {
   var N = arr.length;
 
-  // Build heap (rearrange array)
   for (var i = Math.floor(N / 2) - 1; i >= 0; i--) heapify(arr, N, i);
 
-  // One by one extract an element from heap
   for (var i = N - 1; i > 0; i--) {
-    // Move current root to end
     var temp = arr[0];
     arr[0] = arr[i];
     arr[i] = temp;
 
-    // call max heapify on the reduced heap
     heapify(arr, i, 0);
   }
 }
 
 function heapify(arr, N, i) {
-  var largest = i; // Initialize largest as root
-  var l = 2 * i + 1; // left = 2*i + 1
-  var r = 2 * i + 2; // right = 2*i + 2
+  var largest = i; 
+  var l = 2 * i + 1; 
+  var r = 2 * i + 2; 
 
-  // If left child is larger than root
+  
   if (l < N && arr[l] > arr[largest]) largest = l;
 
-  // If right child is larger than largest so far
+  
   if (r < N && arr[r] > arr[largest]) largest = r;
 
-  // If largest is not root
   if (largest != i) {
     var swap = arr[i];
     arr[i] = arr[largest];
     arr[largest] = swap;
 
-    // Recursively heapify the affected sub-tree
     heapify(arr, N, largest);
   }
 }
 
 function heapSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   heapSortAlgo(inputForSort);
@@ -232,38 +345,33 @@ function heapSort() {
 }
 
 function partition(arr, low, high) {
-  // Choosing the pivot
   let pivot = arr[high];
 
-  // Index of smaller element and indicates the right position of pivot found so far
   let i = low - 1;
 
   for (let j = low; j <= high - 1; j++) {
-    // If current element is smaller than the pivot
+    
     if (arr[j] < pivot) {
-      // Increment index of smaller element
       i++;
-      [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+      [arr[i], arr[j]] = [arr[j], arr[i]]; 
     }
   }
 
-  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]; // Swap pivot to its correct position
-  return i + 1; // Return the partition index
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]]; 
+  return i + 1; 
 }
 
 function quickSortAlgo(arr, low, high) {
   if (low < high) {
-    // pi is the partitioning index, arr[pi] is now at the right place
     let pi = partition(arr, low, high);
 
-    // Separately sort elements before partition and after partition
     quickSortAlgo(arr, low, pi - 1);
     quickSortAlgo(arr, pi + 1, high);
   }
 }
 
 function quickSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   quickSortAlgo(inputForSort, 0, inputForSort.length - 1);
@@ -277,26 +385,18 @@ function threeWayPartition(a, l, r) {
   var v = a[r];
 
   while (true) {
-    // From left, find the first element greater than
-    // or equal to v. This loop will definitely
-    // terminate as v is last element
     while (a[++i] < v);
 
-    // From right, find the first element smaller than
-    // or equal to v
     while (v < a[--j]) if (j == l) break;
 
-    // If i and j cross, then we are done
     if (i >= j) break;
 
-    // Swap, so that smaller goes on left greater goes
-    // on right
+  
     var temp = a[i];
     a[i] = a[j];
     a[j] = temp;
 
-    // Move all same left occurrence of pivot to
-    // beginning of array and keep count using p
+    
     if (a[i] == v) {
       p++;
       temp = a[i];
@@ -304,8 +404,6 @@ function threeWayPartition(a, l, r) {
       a[p] = temp;
     }
 
-    // Move all same right occurrence of pivot to end of
-    // array and keep count using q
     if (a[j] == v) {
       q--;
       temp = a[q];
@@ -314,13 +412,11 @@ function threeWayPartition(a, l, r) {
     }
   }
 
-  // Move pivot element to its correct index
   var temp = a[i];
   a[i] = a[r];
   a[r] = temp;
 
-  // Move all left same occurrences from beginning
-  // to adjacent to arr[i]
+
   j = i - 1;
   for (let k = l; k < p; k++, j--) {
     temp = a[k];
@@ -328,8 +424,6 @@ function threeWayPartition(a, l, r) {
     a[j] = temp;
   }
 
-  // Move all right same occurrences from end
-  // to adjacent to arr[i]
   i = i + 1;
   for (let k = r - 1; k > q; k--, i++) {
     temp = a[i];
@@ -344,16 +438,14 @@ function threeWayQuickSortAlgo(a, l, r) {
 
   (i = 0), (j = 0);
 
-  // Note that i and j are passed as reference
   threeWayPartition(a, l, r);
 
-  // Recur
   threeWayQuickSortAlgo(a, l, j);
   threeWayQuickSortAlgo(a, i, r);
 }
 
 function threeWayQuickSort() {
-  input == undefined && setInput();
+  setInput();
   let inputForSort = input.slice();
   let startTime = window.performance.now();
   threeWayQuickSortAlgo(inputForSort, 0, inputForSort.length - 1);
@@ -363,10 +455,18 @@ function threeWayQuickSort() {
 
 document.getElementById("checkTime").addEventListener("click", function (e) {
   let checkboxes = document.querySelectorAll(".sortCheckBox:checked");
-  let selectedSortingAlgo = [];
-  for (let i = 0; i < checkboxes.length; i++) {
-    selectedSortingAlgo.push(checkboxes[i].value);
-  }
+  let selectedSortingAlgo = [
+    "insertion",
+    "bubble",
+    "selection",
+    "merge",
+    "heap",
+    "quick",
+    "threeWayQuick"
+  ];
+  // for (let i = 0; i < checkboxes.length; i++) {
+  //   selectedSortingAlgo.push(checkboxes[i].value);
+  // }
   for (let i = 0; i < selectedSortingAlgo.length; i++) {
     if (selectedSortingAlgo[i] == "insertion") {
       selectedSortingAlgo[i] = { insertion: insertionSort() };
@@ -390,6 +490,19 @@ document.getElementById("checkTime").addEventListener("click", function (e) {
       selectedSortingAlgo[i] = { threeWayQuick: threeWayQuickSort() };
     }
   }
-
-  console.log(selectedSortingAlgo);
+  data.push(selectedSortingAlgo);
+  arrLength.push(input.length);
+  sortedArray.push()
+  checkboxes = document.querySelectorAll(".sortCheckBox:checked");
+  let checkedSortingAlgo = [];
+  for (let i = 0; i < checkboxes.length; i++) {
+    checkedSortingAlgo.push(checkboxes[i].value);
+  }
+  checkedSortingAlgoArray.push(checkedSortingAlgo);
+  displayTable();
+  console.log(data);
 });
+
+// document.getElementById("viewSortedArray").addEventListener("click", function (e) {
+//   document.getElementById('sortedDiv').innerHTML = "<pre>"+JSON.stringify(data,null,2)+"</pre>"
+// })
