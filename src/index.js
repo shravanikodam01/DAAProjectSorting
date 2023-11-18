@@ -3,11 +3,11 @@
 let randomOrUser = "none",
   data = [],
   arrLength = [],
-  checkedSortingAlgoArray = [],
-  sortedArray=[]
+  checkedSortingAlgoArray = [];
 let input = undefined;
 var i, j;
 
+// code to reset tables and graphs
 document.getElementById("reset").addEventListener("click", function (e) {
   input = undefined;
   randomOrUser = "none";
@@ -19,7 +19,7 @@ document.getElementById("reset").addEventListener("click", function (e) {
     document.getElementById("randomArrayButton").style.display = "inline-block";
     document.getElementById("userArrayButton").style.display = "inline-block";
   document.getElementById('canvasDiv').innerHTML=''
-  displayTable()
+  displayTableAndGraph()
 });
 document
   .getElementById("randomArrayButton")
@@ -39,22 +39,23 @@ document
     randomOrUser = "user";
   });
 
-function display(arr, timeElapsed) {
-  let displayDiv = document.getElementById("sortedDiv");
-  displayDiv.innerHTML = "";
-  for (let i = 0; i < arr.length; i++) {
-    let div = document.createElement("div");
+// function display(arr, timeElapsed) {
+//   let displayDiv = document.getElementById("sortedDiv");
+//   displayDiv.innerHTML = "";
+//   for (let i = 0; i < arr.length; i++) {
+//     let div = document.createElement("div");
 
-    div.className = "element";
+//     div.className = "element";
 
-    div.innerHTML = `${arr[i]}`;
-    displayDiv.appendChild(div);
-  }
-  let timeCal = document.getElementById("timeCal");
-  timeCal.innerHTML = `${timeElapsed} milliseconds`;
-}
+//     div.innerHTML = `${arr[i]}`;
+//     displayDiv.appendChild(div);
+//   }
+//   let timeCal = document.getElementById("timeCal");
+//   timeCal.innerHTML = `${timeElapsed} milliseconds`;
+// }
 
-function displayTable() {
+//This function is used to display the entire data
+function displayTableAndGraph() {
 
   let tableDiv = document.getElementById("comparisionTable");
   let tableStr = `<table><tr>
@@ -72,6 +73,7 @@ function displayTable() {
   for (let i = 0; i < data.length; i++) {
     canvas = document.createElement("div");
     canvas.setAttribute("id", "canvas" + i);
+    canvas.setAttribute("class", "graph");
 
     document.getElementById("canvasDiv").appendChild(canvas);
     
@@ -162,6 +164,7 @@ function displayTable() {
   document.getElementById("userArrayButton").style.display = "inline-block";
 }
 
+//Based on user input we are generating the array to sort
 function setInput() {
   if (randomOrUser == "user") {
     input = document.getElementById("inputArray").value.split(" ");
@@ -431,17 +434,17 @@ function threeWayPartition(a, l, r) {
     a[k] = temp;
   }
 }
-function threeWayQuickSortAlgo(a, l, r) {
+function threeWayQuickSortAlgo(arr, l, r) {
   if (r <= l) {
     return;
   }
 
   (i = 0), (j = 0);
 
-  threeWayPartition(a, l, r);
+  threeWayPartition(arr, l, r);
 
-  threeWayQuickSortAlgo(a, l, j);
-  threeWayQuickSortAlgo(a, i, r);
+  threeWayQuickSortAlgo(arr, l, j);
+  threeWayQuickSortAlgo(arr, i, r);
 }
 
 function threeWayQuickSort() {
@@ -492,14 +495,13 @@ document.getElementById("checkTime").addEventListener("click", function (e) {
   }
   data.push(selectedSortingAlgo);
   arrLength.push(input.length);
-  sortedArray.push()
   checkboxes = document.querySelectorAll(".sortCheckBox:checked");
   let checkedSortingAlgo = [];
   for (let i = 0; i < checkboxes.length; i++) {
     checkedSortingAlgo.push(checkboxes[i].value);
   }
   checkedSortingAlgoArray.push(checkedSortingAlgo);
-  displayTable();
+  displayTableAndGraph();
   console.log(data);
 });
 
